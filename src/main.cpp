@@ -11,10 +11,9 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
-// LeftBaseMotor        motor         2               
-// RightBaseMotor       motor         1               
-// LeftLiftMotor        motor         3               
-// RightLiftMotor       motor         4               
+// BaseLeft             motor_group   19, 20          
+// BaseRight            motor_group   17, 18          
+// Lift                 motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -24,6 +23,7 @@ using namespace vex;
 // Global Variables
 vex::competition Competition;
 
+const int DELAY_MS = 10;
 // End Global Variables
 
 
@@ -39,6 +39,8 @@ vex::competition Competition;
 
 void preAutonomous(void) {
   vexcodeInit();
+  BaseLeft.setStopping(brake);
+  BaseRight.setStopping(brake);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -61,42 +63,22 @@ void preAutonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-// Checks for input related to the base of the robot
-void baseMovement(void) {
-  // Moves the wheels based on the corresponding axis and percent
-  LeftBaseMotor.spin(vex::directionType::rev, Controller1.Axis3.position(), vex::velocityUnits::pct);
-  RightBaseMotor.spin(vex::directionType::rev, Controller1.Axis2.position(), vex::velocityUnits::pct);
-}
-
-void liftMovement(void) {
-  // Move the Lift Up
-  if (Controller1.ButtonR1.pressing())
-  {
-    LeftLiftMotor.spin(directionType::rev, 60, velocityUnits::pct);
-    RightLiftMotor.spin(directionType::rev, 60, velocityUnits::pct);
-  } 
-  // Move the Lift Down
-  else if (Controller1.ButtonL1.pressing())
-  {
-    LeftLiftMotor.spin(directionType::fwd, 60, velocityUnits::pct);
-    RightLiftMotor.spin(directionType::fwd, 60, velocityUnits::pct);
-  }
-  // Stop Movement
-  else 
-  {
-    LeftLiftMotor.stop(brakeType::hold);
-    RightLiftMotor.stop(brakeType::hold);
-  }
-}
 
 // Loops through all movement input checks
 void userControl(void) {
   while (true) {
-    baseMovement();
-    liftMovement();
+    BaseLeft.spin(forward, Controller1.Axis3.position(percent), percent);
+    BaseRight.spin(forward, Controller1.Axis2.position(percent), percent);
 
-    // prevent wasting resources
-    wait(20, msec);
+    if (Controller1.ButtonR1.pressing()) {
+      Lift.spin(forward, 70, percent);
+    } else if (Controller1.ButtonR2.pressing()) {
+      Lift.spin(reverse, 70, percent);
+    } else {
+      Lift.stop();
+    }
+    // Keep iterations constant speed
+    wait(DELAY_MS, msec);
   }
 }
 
