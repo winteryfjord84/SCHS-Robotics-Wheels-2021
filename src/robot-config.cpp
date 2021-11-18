@@ -16,6 +16,9 @@ motor BaseRightMotorA = motor(PORT17, ratio18_1, false);
 motor BaseRightMotorB = motor(PORT18, ratio18_1, false);
 motor_group BaseRight = motor_group(BaseRightMotorA, BaseRightMotorB);
 motor Lift = motor(PORT11, ratio36_1, false);
+motor ConveyorMotorA = motor(PORT9, ratio18_1, false);
+motor ConveyorMotorB = motor(PORT10, ratio18_1, false);
+motor_group Conveyor = motor_group(ConveyorMotorA, ConveyorMotorB);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

@@ -14,6 +14,7 @@
 // BaseLeft             motor_group   19, 20          
 // BaseRight            motor_group   17, 18          
 // Lift                 motor         11              
+// Conveyor             motor_group   9, 10           
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -76,6 +77,14 @@ void userControl(void) {
       Lift.spin(reverse, 70, percent);
     } else {
       Lift.stop();
+    }
+
+    if (Controller1.ButtonL1.pressing()) {
+      Conveyor.spin(forward, 75, percent);
+    } else if (Controller1.ButtonL2.pressing()) {
+      Conveyor.spin(reverse, 75, percent);
+    } else {
+      Conveyor.stop();
     }
     // Keep iterations constant speed
     wait(DELAY_MS, msec);
