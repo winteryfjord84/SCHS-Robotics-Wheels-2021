@@ -25,6 +25,7 @@ using namespace vex;
 vex::competition Competition;
 
 const int DELAY_MS = 10;
+const float SPEED_SCALE = 0.75;
 // End Global Variables
 
 
@@ -54,6 +55,10 @@ void preAutonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+void autonomous(void) {
+
+}
+
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              User Control Task                            */
@@ -65,12 +70,14 @@ void preAutonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 
-// Loops through all movement input checks
 void userControl(void) {
+  // Loops through all movement input checks
   while (true) {
-    BaseLeft.spin(forward, Controller1.Axis3.position(percent), percent);
-    BaseRight.spin(forward, Controller1.Axis2.position(percent), percent);
+    // Base Movement
+    BaseLeft.spin(forward, Controller1.Axis3.position(percent) * SPEED_SCALE, percent);
+    BaseRight.spin(forward, Controller1.Axis2.position(percent) * SPEED_SCALE, percent);
 
+    // Goal Lift
     if (Controller1.ButtonR1.pressing()) {
       Lift.spin(forward, 70, percent);
     } else if (Controller1.ButtonR2.pressing()) {
@@ -79,6 +86,7 @@ void userControl(void) {
       Lift.stop();
     }
 
+    // Conveyor Control
     if (Controller1.ButtonL1.pressing()) {
       Conveyor.spin(forward, 75, percent);
     } else if (Controller1.ButtonL2.pressing()) {
@@ -86,7 +94,7 @@ void userControl(void) {
     } else {
       Conveyor.stop();
     }
-    // Keep iterations constant speed
+    
     wait(DELAY_MS, msec);
   }
 }
@@ -94,6 +102,7 @@ void userControl(void) {
 int main() {
   preAutonomous();
 
+  Competition.autonomous(autonomous);
   Competition.drivercontrol(userControl);
 
   // Prevent main from returning 
