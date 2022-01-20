@@ -13,8 +13,8 @@
 // Controller1          controller                    
 // BaseLeft             motor_group   19, 20          
 // BaseRight            motor_group   17, 18          
-// Lift                 motor         11              
 // Conveyor             motor_group   9, 10           
+// Lift                 motor_group   11, 12          
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -25,8 +25,22 @@ using namespace vex;
 vex::competition Competition;
 
 const int DELAY_MS = 10;
-const float SPEED_SCALE = 0.75;
+const float SPEED_SCALE = 0.50;
 // End Global Variables
+
+// Utility Functions
+void moveStraight(bool forward, int seconds, int percentSpeed) {
+  if (forward) {
+    BaseLeft.spin(vex::forward, percentSpeed, percent);
+    BaseRight.spin(vex::forward, percentSpeed, percent);
+  } else {
+    BaseLeft.spin(vex::forward, percentSpeed, percent);
+    BaseRight.spin(vex::forward, percentSpeed, percent);
+  }
+    wait(seconds, vex::seconds);
+    BaseLeft.stop();
+    BaseRight.stop();
+}
 
 
 /*---------------------------------------------------------------------------*/
@@ -56,7 +70,10 @@ void preAutonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-
+  // Lower lift, move forward, lift a goal, move backward
+  Conveyor.spin(reverse, 75, percent);
+  wait(15, seconds);
+  Conveyor.stop();
 }
 
 /*---------------------------------------------------------------------------*/
