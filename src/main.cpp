@@ -26,10 +26,10 @@ vex::competition Competition;
 
 const int DELAY_MS = 10;
 // Base wheels speed scaling
-const float SPEED_SCALE = 0.50;
+const float SPEED_SCALE = 0.60;
 // Following two constants are percentages
 const int LIFT_SPEED = 50;
-const int CONVEYOR_SPEED = 75;
+const int CONVEYOR_SPEED = 60;
 // End Global Variables
 
 // Utility Functions
