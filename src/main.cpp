@@ -25,7 +25,9 @@ using namespace vex;
 vex::competition Competition;
 
 const int DELAY_MS = 10;
+// Base wheels speed scaling
 const float SPEED_SCALE = 0.50;
+const int LIFT_SPEED = 50;
 // End Global Variables
 
 // Utility Functions
@@ -71,7 +73,7 @@ void preAutonomous(void) {
 
 void autonomous(void) {
   // Lower lift, move forward, lift a goal, move backward
-  Conveyor.spin(reverse, 75, percent);
+  Conveyor.spin(reverse, LIFT_SPEED, percent);
   wait(15, seconds);
   Conveyor.stop();
 }
@@ -96,9 +98,9 @@ void userControl(void) {
 
     // Goal Lift
     if (Controller1.ButtonR1.pressing()) {
-      Lift.spin(forward, 70, percent);
+      Lift.spin(forward, LIFT_SPEED, percent);
     } else if (Controller1.ButtonR2.pressing()) {
-      Lift.spin(reverse, 70, percent);
+      Lift.spin(reverse, LIFT_SPEED, percent);
     } else {
       Lift.stop();
     }
