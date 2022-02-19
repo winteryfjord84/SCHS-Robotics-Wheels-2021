@@ -27,7 +27,9 @@ vex::competition Competition;
 const int DELAY_MS = 10;
 // Base wheels speed scaling
 const float SPEED_SCALE = 0.50;
+// Following two constants are percentages
 const int LIFT_SPEED = 50;
+const int CONVEYOR_SPEED = 75;
 // End Global Variables
 
 // Utility Functions
@@ -107,9 +109,9 @@ void userControl(void) {
 
     // Conveyor Control
     if (Controller1.ButtonL1.pressing()) {
-      Conveyor.spin(forward, 75, percent);
+      Conveyor.spin(forward, CONVEYOR_SPEED, percent);
     } else if (Controller1.ButtonL2.pressing()) {
-      Conveyor.spin(reverse, 75, percent);
+      Conveyor.spin(reverse, CONVEYOR_SPEED, percent);
     } else {
       Conveyor.stop();
     }
