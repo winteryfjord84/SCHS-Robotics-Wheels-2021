@@ -113,24 +113,24 @@ void autonomous(void) {
 void userControl(void) {
   // current base speed scale: float 0 to 1
   float baseSpeedScale = BASE_SPEED_SCALE;
-  Controller1.Screen.print("A: Reset");
-  Controller1.Screen.newLine();
+  Brain.Screen.print("A: Reset");
+  Brain.Screen.newLine();
 
   // Continuously loops through all controller input checks
   while (true) {
-    Controller1.Screen.clearLine();
-    Controller1.Screen.print("Current Speed: ");
-    Controller1.Screen.print(baseSpeedScale);
+    Brain.Screen.clearLine();
+    Brain.Screen.print("Current Speed: ");
+    Brain.Screen.print(baseSpeedScale);
 
-    // Change speed scale
-    if (Controller1.ButtonA.pressing()) {
+    // Change speed scale for robot movement
+    if (Controller1.ButtonA.pressing()) { // base case
       baseSpeedScale = BASE_SPEED_SCALE;
-    } else if (Controller1.ButtonUp.pressing()) {
-      baseSpeedScale += 0.10;
-    } else if (Controller1.ButtonDown.pressing()) {
-      baseSpeedScale -= 0.10;
-    } else if (Controller1.ButtonX.pressing()) {
+    } else if (Controller1.ButtonX.pressing()) { // max
       baseSpeedScale = 1.0;
+    } else if (Controller1.ButtonB.pressing()) { // low -> 40 percent
+      baseSpeedScale = 0.40;
+    } else if (Controller1.ButtonY.pressing()) { // medium
+      baseSpeedScale = 0.80;
     }
 
     // Robot Base control: left and right joysticks
