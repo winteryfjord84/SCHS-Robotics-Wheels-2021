@@ -21,7 +21,7 @@
 
 using namespace vex;
 
-// Global Variables
+// ---- START GLOBAL VARIABLES ----
 vex::competition Competition;
 
 const int DELAY_MS = 10;
@@ -30,7 +30,7 @@ const float SPEED_SCALE = 0.60;
 // Following two constants are percentages
 const int LIFT_SPEED = 50;
 const int CONVEYOR_SPEED = 60;
-// End Global Variables
+// ---- END GLOBAL VARIABLES ----
 
 // Utility Functions
 void moveStraight(bool forward, int seconds, int percentSpeed) {
