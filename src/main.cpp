@@ -24,27 +24,43 @@ using namespace vex;
 // ---- START GLOBAL VARIABLES ----
 vex::competition Competition;
 
-const int DELAY_MS = 10;
-// Base wheels speed scaling
+// Delay between every loop during user control loop to prevent
+// wasted resources
+// (In milliseconds)
+const int DELAY = 10;
+
+// Scale for the speed of the base wheels
 const float SPEED_SCALE = 0.60;
-// Following two constants are percentages
+
+// Scales of lift and conveyor
+// (each is out of 100)
 const int LIFT_SPEED = 50;
 const int CONVEYOR_SPEED = 60;
 // ---- END GLOBAL VARIABLES ----
 
-// Utility Functions
+
+// ---- START UTILITY FUNCTIONS ----
+// Functions that might be used during autonomous or user-control.
+
+// Moves the robot forward
+// Parameters:
+// - forward: bool - if movement is foreward
+// - seconds: int - durations in second
+// - percentSpeed
 void moveStraight(bool forward, int seconds, int percentSpeed) {
   if (forward) {
     BaseLeft.spin(vex::forward, percentSpeed, percent);
     BaseRight.spin(vex::forward, percentSpeed, percent);
   } else {
-    BaseLeft.spin(vex::forward, percentSpeed, percent);
-    BaseRight.spin(vex::forward, percentSpeed, percent);
+    BaseLeft.spin(vex::reverse, percentSpeed, percent);
+    BaseRight.spin(vex::reverse, percentSpeed, percent);
   }
     wait(seconds, vex::seconds);
     BaseLeft.stop();
     BaseRight.stop();
 }
+
+// ---- END UTILITY FUNCTIONS ----
 
 
 /*---------------------------------------------------------------------------*/
@@ -57,8 +73,11 @@ void moveStraight(bool forward, int seconds, int percentSpeed) {
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-void preAutonomous(void) {
+void preAuton(void) {
+  // Initialize robot configuration
   vexcodeInit();
+  
+  // Set brake mode of wheels
   BaseLeft.setStopping(brake);
   BaseRight.setStopping(brake);
 }
@@ -74,7 +93,7 @@ void preAutonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  // Lower lift, move forward, lift a goal, move backward
+  // Current actions: Lower lift, move forward, lift a goal, move backward
   Conveyor.spin(reverse, LIFT_SPEED, percent);
   wait(15, seconds);
   Conveyor.stop();
@@ -116,17 +135,22 @@ void userControl(void) {
       Conveyor.stop();
     }
     
-    wait(DELAY_MS, msec);
+    wait(DELAY, msec); // waits DELAY duration to prevent wasted resources
   }
 }
 
+
+//
+// Sets up competition functions and callbacks
+//
 int main() {
-  preAutonomous();
+  // Run pre-autonomous function
+  preAuton();
 
   Competition.autonomous(autonomous);
   Competition.drivercontrol(userControl);
 
-  // Prevent main from returning 
+  // Prevent main from returning with an infinite loop
   while (true) {
     wait(100, msec);
   }
