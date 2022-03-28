@@ -46,15 +46,11 @@ const int CONVEYOR_SPEED = 60;
 // - forward: bool - if movement is foreward
 // - seconds: int - durations in second
 // - percentSpeed
-void moveStraight(bool forward, int seconds, int percentSpeed)
-{
-  if (forward)
-  {
+void moveStraight(bool forward, int seconds, int percentSpeed) {
+  if (forward) {
     BaseLeft.spin(vex::forward, percentSpeed, percent);
     BaseRight.spin(vex::forward, percentSpeed, percent);
-  }
-  else
-  {
+  } else {
     BaseLeft.spin(vex::reverse, percentSpeed, percent);
     BaseRight.spin(vex::reverse, percentSpeed, percent);
   }
@@ -75,8 +71,7 @@ void moveStraight(bool forward, int seconds, int percentSpeed)
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-void preAutonomous(void)
-{
+void preAutonomous(void) {
   // Initialize robot configuration
   vexcodeInit();
 
@@ -95,8 +90,7 @@ void preAutonomous(void)
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void autonomous(void)
-{
+void autonomous(void) {
   // Current actions: Lower lift, move forward, lift a goal, move backward
   Conveyor.spin(reverse, LIFT_SPEED, percent);
   wait(15, seconds);
@@ -113,40 +107,30 @@ void autonomous(void)
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void userControl(void)
-{
+void userControl(void) {
   // Continuously loops through all controller input checks
-  while (true)
-  {
+  while (true) {
     // Robot Base control: left and right joysticks
-    BaseLeft.spin(forward, Controller1.Axis3.position(percent) * SPEED_SCALE, percent);
-    BaseRight.spin(forward, Controller1.Axis2.position(percent) * SPEED_SCALE, percent);
+    BaseLeft.spin(forward, Controller1.Axis3.position(percent) * SPEED_SCALE,
+                  percent);
+    BaseRight.spin(forward, Controller1.Axis2.position(percent) * SPEED_SCALE,
+                   percent);
 
     // Mobile Goal Lift: front right hand buttons
-    if (Controller1.ButtonR1.pressing())
-    {
+    if (Controller1.ButtonR1.pressing()) {
       Lift.spin(forward, LIFT_SPEED, percent);
-    }
-    else if (Controller1.ButtonR2.pressing())
-    {
+    } else if (Controller1.ButtonR2.pressing()) {
       Lift.spin(reverse, LIFT_SPEED, percent);
-    }
-    else
-    {
+    } else {
       Lift.stop();
     }
 
     // Conveyor Control: front left hand buttons
-    if (Controller1.ButtonL1.pressing())
-    {
+    if (Controller1.ButtonL1.pressing()) {
       Conveyor.spin(forward, CONVEYOR_SPEED, percent);
-    }
-    else if (Controller1.ButtonL2.pressing())
-    {
+    } else if (Controller1.ButtonL2.pressing()) {
       Conveyor.spin(reverse, CONVEYOR_SPEED, percent);
-    }
-    else
-    {
+    } else {
       Conveyor.stop();
     }
     // waits DELAY duration to prevent wasted resources
@@ -157,8 +141,7 @@ void userControl(void)
 //
 // Sets up competition functions and callbacks
 //
-int main()
-{
+int main() {
   // Run pre-autonomous function
   preAutonomous();
 
@@ -166,8 +149,7 @@ int main()
   Competition.drivercontrol(userControl);
 
   // Prevent main from returning with an infinite loop
-  while (true)
-  {
+  while (true) {
     wait(100, msec);
   }
 }
