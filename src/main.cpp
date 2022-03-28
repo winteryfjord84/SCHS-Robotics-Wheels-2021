@@ -30,7 +30,7 @@ vex::competition Competition;
 const int DELAY = 10;
 
 // Scale for the speed of the base wheels
-const float SPEED_SCALE = 0.60;
+const float BASE_SPEED_SCALE = 0.60;
 
 // Scales of lift and conveyor
 // (each is out of 100)
@@ -111,13 +111,33 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void userControl(void) {
+  // current base speed scale: float 0 to 1
+  float baseSpeedScale = BASE_SPEED_SCALE;
+  Controller1.Screen.print("A: Reset");
+  Controller1.Screen.newLine();
+
   // Continuously loops through all controller input checks
   while (true) {
+    Controller1.Screen.clearLine();
+    Controller1.Screen.print("Current Speed: ");
+    Controller1.Screen.print(baseSpeedScale);
+
+    // Change speed scale
+    if (Controller1.ButtonA.pressing()) {
+      baseSpeedScale = BASE_SPEED_SCALE;
+    } else if (Controller1.ButtonUp.pressing()) {
+      baseSpeedScale += 0.10;
+    } else if (Controller1.ButtonDown.pressing()) {
+      baseSpeedScale -= 0.10;
+    } else if (Controller1.ButtonX.pressing()) {
+      baseSpeedScale = 1.0;
+    }
+
     // Robot Base control: left and right joysticks
-    BaseLeft.spin(forward, Controller1.Axis3.position(percent) * SPEED_SCALE,
+    BaseLeft.spin(forward, Controller1.Axis3.position(percent) * baseSpeedScale,
                   percent);
-    BaseRight.spin(forward, Controller1.Axis2.position(percent) * SPEED_SCALE,
-                   percent);
+    BaseRight.spin(
+        forward, Controller1.Axis2.position(percent) * baseSpeedScale, percent);
 
     // Mobile Goal Lift: front right hand buttons
     if (Controller1.ButtonR1.pressing()) {
@@ -141,9 +161,7 @@ void userControl(void) {
   }
 }
 
-//
 // Sets up competition functions and callbacks
-//
 int main() {
   // Run pre-autonomous function
   preAutonomous();
