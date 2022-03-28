@@ -41,11 +41,12 @@ const int CONVEYOR_SPEED = 60;
 // ---- START UTILITY FUNCTIONS ----
 // Functions that might be used during autonomous or user-control.
 
-// Moves the robot forward
-// Parameters:
-// - forward: bool - if movement is foreward
-// - seconds: int - durations in second
-// - percentSpeed
+/* Moves the robot forward
+ *
+ * @param forward is movement is forward
+ * @param seconds durations in integer seconds
+ * @param percentSpeed percent of current maximum speed (less than 1)
+ */
 void moveStraight(bool forward, int seconds, int percentSpeed) {
   if (forward) {
     BaseLeft.spin(vex::forward, percentSpeed, percent);
@@ -54,7 +55,9 @@ void moveStraight(bool forward, int seconds, int percentSpeed) {
     BaseLeft.spin(vex::reverse, percentSpeed, percent);
     BaseRight.spin(vex::reverse, percentSpeed, percent);
   }
+
   wait(seconds, vex::seconds);
+
   BaseLeft.stop();
   BaseRight.stop();
 }
