@@ -115,14 +115,14 @@ void autonomous(void)
 
 void userControl(void)
 {
-  // Loops through all movement input checks
+  // Continuously loops through all controller input checks
   while (true)
   {
-    // Base Movement
+    // Robot Base control: left and right joysticks
     BaseLeft.spin(forward, Controller1.Axis3.position(percent) * SPEED_SCALE, percent);
     BaseRight.spin(forward, Controller1.Axis2.position(percent) * SPEED_SCALE, percent);
 
-    // Goal Lift
+    // Mobile Goal Lift: front right hand buttons
     if (Controller1.ButtonR1.pressing())
     {
       Lift.spin(forward, LIFT_SPEED, percent);
@@ -136,7 +136,7 @@ void userControl(void)
       Lift.stop();
     }
 
-    // Conveyor Control
+    // Conveyor Control: front left hand buttons
     if (Controller1.ButtonL1.pressing())
     {
       Conveyor.spin(forward, CONVEYOR_SPEED, percent);
@@ -149,8 +149,8 @@ void userControl(void)
     {
       Conveyor.stop();
     }
-
-    wait(DELAY, msec); // waits DELAY duration to prevent wasted resources
+    // waits DELAY duration to prevent wasted resources
+    wait(DELAY, msec);
   }
 }
 
