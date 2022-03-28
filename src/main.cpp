@@ -10,11 +10,11 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// BaseLeft             motor_group   19, 20          
-// BaseRight            motor_group   17, 18          
-// Conveyor             motor_group   9, 10           
-// Lift                 motor_group   11, 12          
+// Controller1          controller
+// BaseLeft             motor_group   19, 20
+// BaseRight            motor_group   17, 18
+// Conveyor             motor_group   9, 10
+// Lift                 motor_group   11, 12
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -38,7 +38,6 @@ const int LIFT_SPEED = 50;
 const int CONVEYOR_SPEED = 60;
 // ---- END GLOBAL VARIABLES ----
 
-
 // ---- START UTILITY FUNCTIONS ----
 // Functions that might be used during autonomous or user-control.
 
@@ -47,21 +46,24 @@ const int CONVEYOR_SPEED = 60;
 // - forward: bool - if movement is foreward
 // - seconds: int - durations in second
 // - percentSpeed
-void moveStraight(bool forward, int seconds, int percentSpeed) {
-  if (forward) {
+void moveStraight(bool forward, int seconds, int percentSpeed)
+{
+  if (forward)
+  {
     BaseLeft.spin(vex::forward, percentSpeed, percent);
     BaseRight.spin(vex::forward, percentSpeed, percent);
-  } else {
+  }
+  else
+  {
     BaseLeft.spin(vex::reverse, percentSpeed, percent);
     BaseRight.spin(vex::reverse, percentSpeed, percent);
   }
-    wait(seconds, vex::seconds);
-    BaseLeft.stop();
-    BaseRight.stop();
+  wait(seconds, vex::seconds);
+  BaseLeft.stop();
+  BaseRight.stop();
 }
 
 // ---- END UTILITY FUNCTIONS ----
-
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -73,10 +75,11 @@ void moveStraight(bool forward, int seconds, int percentSpeed) {
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-void preAuton(void) {
+void preAutonomous(void)
+{
   // Initialize robot configuration
   vexcodeInit();
-  
+
   // Set brake mode of wheels
   BaseLeft.setStopping(brake);
   BaseRight.setStopping(brake);
@@ -92,7 +95,8 @@ void preAuton(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-void autonomous(void) {
+void autonomous(void)
+{
   // Current actions: Lower lift, move forward, lift a goal, move backward
   Conveyor.spin(reverse, LIFT_SPEED, percent);
   wait(15, seconds);
@@ -109,49 +113,61 @@ void autonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-
-void userControl(void) {
+void userControl(void)
+{
   // Loops through all movement input checks
-  while (true) {
+  while (true)
+  {
     // Base Movement
     BaseLeft.spin(forward, Controller1.Axis3.position(percent) * SPEED_SCALE, percent);
     BaseRight.spin(forward, Controller1.Axis2.position(percent) * SPEED_SCALE, percent);
 
     // Goal Lift
-    if (Controller1.ButtonR1.pressing()) {
+    if (Controller1.ButtonR1.pressing())
+    {
       Lift.spin(forward, LIFT_SPEED, percent);
-    } else if (Controller1.ButtonR2.pressing()) {
+    }
+    else if (Controller1.ButtonR2.pressing())
+    {
       Lift.spin(reverse, LIFT_SPEED, percent);
-    } else {
+    }
+    else
+    {
       Lift.stop();
     }
 
     // Conveyor Control
-    if (Controller1.ButtonL1.pressing()) {
+    if (Controller1.ButtonL1.pressing())
+    {
       Conveyor.spin(forward, CONVEYOR_SPEED, percent);
-    } else if (Controller1.ButtonL2.pressing()) {
+    }
+    else if (Controller1.ButtonL2.pressing())
+    {
       Conveyor.spin(reverse, CONVEYOR_SPEED, percent);
-    } else {
+    }
+    else
+    {
       Conveyor.stop();
     }
-    
+
     wait(DELAY, msec); // waits DELAY duration to prevent wasted resources
   }
 }
 
-
 //
 // Sets up competition functions and callbacks
 //
-int main() {
+int main()
+{
   // Run pre-autonomous function
-  preAuton();
+  preAutonomous();
 
   Competition.autonomous(autonomous);
   Competition.drivercontrol(userControl);
 
   // Prevent main from returning with an infinite loop
-  while (true) {
+  while (true)
+  {
     wait(100, msec);
   }
 }
