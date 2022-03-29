@@ -35,7 +35,7 @@ const float BASE_SPEED_SCALE = 0.60;
 // Scales of lift and conveyor
 // (each is out of 100)
 const int LIFT_SPEED = 50;
-const int CONVEYOR_SPEED = 60;
+const int BASE_CONVEYOR_SPEED = 40;
 // ---- END GLOBAL VARIABLES ----
 
 // ---- START UTILITY FUNCTIONS ----
@@ -113,6 +113,7 @@ void autonomous(void) {
 void userControl(void) {
   // current base speed scale: float 0 to 1
   float baseSpeedScale = BASE_SPEED_SCALE;
+  int conveyorSpeed = BASE_CONVEYOR_SPEED;
   Brain.Screen.print("A: Reset");
   Brain.Screen.newLine();
 
@@ -148,11 +149,22 @@ void userControl(void) {
       Lift.stop();
     }
 
+    // Change Conveyor speed
+    if (Controller1.ButtonUp.pressing()) {
+      conveyorSpeed = 100;
+    } else if (Controller1.ButtonDown.pressing()) {
+      conveyorSpeed = 40;
+    } else if (Controller1.ButtonLeft.pressing()) {
+      conveyorSpeed = 60;
+    } else if (Controller1.ButtonRight.pressing()) {
+      conveyorSpeed = 80;
+    }
+
     // Conveyor Control: front left hand buttons
     if (Controller1.ButtonL1.pressing()) {
-      Conveyor.spin(forward, CONVEYOR_SPEED, percent);
+      Conveyor.spin(forward, conveyorSpeed, percent);
     } else if (Controller1.ButtonL2.pressing()) {
-      Conveyor.spin(reverse, CONVEYOR_SPEED, percent);
+      Conveyor.spin(reverse, conveyorSpeed, percent);
     } else {
       Conveyor.stop();
     }
